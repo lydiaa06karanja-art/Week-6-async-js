@@ -102,7 +102,7 @@ getUserData(1)
  .catch(error => {
     console.log("Error:", error);
   });
-// TASK 11.3: Promise Chaining
+//  Promise Chaining
 
 // Exercise 1: Chain Promises
 getUserData(1)
@@ -119,4 +119,16 @@ getUserData(1)
   })
 .catch(error => {
     console.error("Error:", error);
+  });
+// Exercise 2: Promise.all
+const promise1 = getUserData(1);
+const promise2 = getUserData(2);
+const promise3 = getUserData(3);
+
+Promise.all([promise1, promise2, promise3])
+.then(results => {
+    console.log("All users:", results);
+  })
+.catch(error => {
+    console.error("One failed:", error);
   });
