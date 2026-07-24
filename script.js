@@ -102,3 +102,21 @@ getUserData(1)
  .catch(error => {
     console.log("Error:", error);
   });
+// TASK 11.3: Promise Chaining
+
+// Exercise 1: Chain Promises
+getUserData(1)
+.then(user => {
+    console.log("User:", user);
+    return getUserPosts(user.id);
+  })
+.then(posts => {
+    console.log("Posts:", posts);
+    return getPostComments(posts[0].id);
+  })
+.then(comments => {
+    console.log("Comments:", comments);
+  })
+.catch(error => {
+    console.error("Error:", error);
+  });
