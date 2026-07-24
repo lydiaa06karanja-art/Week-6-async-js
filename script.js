@@ -44,3 +44,61 @@ function loadUser(userId, callback) {
 loadUser(5, function(user) {
   console.log("Loaded:", user);
 });
+
+// EXERCISE 2: Promises to the Rescue
+
+// Refactored getUserData
+function getUserData(userId) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (userId > 0) {
+        resolve({ id: userId, name: "John" });
+      } else {
+        reject("Invalid user ID");
+      }
+    }, 1000);
+  });
+}
+
+// Refactor getUserPosts
+function getUserPosts(userId) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (userId > 0) {
+        resolve([{ id: 1, text: "Thanks for reading" }]);
+      } else {
+        reject("Invalid user ID");
+      }
+    }, 1000);
+  });
+}
+
+// Refactor getPostComments
+function getPostComments(postId) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (postId > 0) {
+        resolve([{ id: 1, text: "Great post!" }]);
+      } else {
+        reject("Invalid post ID");
+      }
+    }, 1000);
+  });
+}
+
+// Using Promises instead of callback hell
+getUserData(1)
+ .then(user => {
+    console.log("User:", user);
+    return getUserPosts(user.id);
+  })
+ .then(posts => {
+    console.log("Posts:", posts);
+    return getPostComments(posts[0].id);
+  })
+ .then(comments => {
+    console.log("Comments:", comments);
+  })
+ .catch(error => {
+    console.log("Error:", error);
+  });
