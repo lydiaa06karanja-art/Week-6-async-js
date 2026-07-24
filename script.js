@@ -1,5 +1,5 @@
 
-// EXERCISE 1: Synchronous vs Asynchronous
+//  Synchronous vs Asynchronous
 // Predict the output
 
 console.log("A");
@@ -16,7 +16,7 @@ console.log("E");
 // D
 // Reason: Synchronous code runs first A, C, E. Then async callbacks B then D
 
-// EXERCISE 2: Callback Pattern
+//  Callback Pattern
 
 // 1. fetchData function
 function fetchData(callback) {
@@ -45,7 +45,7 @@ loadUser(5, function(user) {
   console.log("Loaded:", user);
 });
 
-// EXERCISE 2: Promises to the Rescue
+//  Promises to the Rescue
 
 // Refactored getUserData
 function getUserData(userId) {
@@ -104,7 +104,7 @@ getUserData(1)
   });
 //  Promise Chaining
 
-// Exercise 1: Chain Promises
+//  Chain Promises
 getUserData(1)
 .then(user => {
     console.log("User:", user);
@@ -120,7 +120,7 @@ getUserData(1)
 .catch(error => {
     console.error("Error:", error);
   });
-// Exercise 2: Promise.all
+//  Promise.all
 const promise1 = getUserData(1);
 const promise2 = getUserData(2);
 const promise3 = getUserData(3);
@@ -131,4 +131,12 @@ Promise.all([promise1, promise2, promise3])
   })
 .catch(error => {
     console.error("One failed:", error);
+  });
+//  Promise.race
+const fast = new Promise(resolve => setTimeout(() => resolve("Fast won!"), 500));
+const slow = new Promise(resolve => setTimeout(() => resolve("Slow won!"), 2000));
+
+Promise.race([fast, slow])
+.then(result => {
+    console.log("Winner:", result);
   });
