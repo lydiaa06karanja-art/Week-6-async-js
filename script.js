@@ -341,3 +341,76 @@ function displayUsers(users) {
 // Initialize
 loadUsers();
 
+const BASE_URL = "https://jsonplaceholder.typicode.com";
+
+const form = document.getElementById("post-form");
+const loading = document.getElementById("loading");
+const errorDiv = document.getElementById("error");
+const resultDiv = document.getElementById("result");
+
+//   Creating Resources 
+async function createPost(title, body, userId) {
+  const response = await fetch(`${BASE_URL}/posts`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      title,
+      body,
+      userId
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create post");
+  }
+
+  return response.json();
+}
+
+// BUILD: Form that submits and displays result 
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  const title = document.getElementById("title").value;
+  const body = document.getElementById("body").value;
+  const userId = parseInt(document.getElementById("userId").value);
+
+  try {
+    showLoading();
+    const newPost = await createPost(title, body, userId);
+    showResult(newPost);
+    form.reset();
+  } catch (error) {
+    showError(error.message);
+  } finally {
+    hideLoading();
+  }
+});
+
+function showLoading() {
+  loading.classList.remove("hidden");
+  errorDiv.classList.add("hidden");
+  resultDiv.classList.add("hidden");
+}
+
+function hideLoading() {
+  loading.classList.add("hidden");
+}
+
+function showError(message) {
+  errorDiv.textContent = `Error: ${message}`;
+  errorDiv.classList.remove("hidden");
+}
+
+function showResult(post) {
+  resultDiv.innerHTML = `
+    <h3>✅ Post Created!</h3>
+    <p><strong>ID:</strong> ${post.id}</p>
+    <p><strong>Title:</strong> ${post.title}</p>
+    <p><strong>Body:</strong> ${post.body}</p>
+    <p><strong>UserID:</strong> ${post.userId}</p>
+  `;
+  resultDiv.classList.remove("hidden");
+}
