@@ -19,11 +19,23 @@
     }
     .user-card h2 { margin: 0 0 10px 0; }
     .user-card p { margin: 5px 0; }
+    .controls { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+input, select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; flex: 1; }
   </style>
 </head>
 <body>
   <div id="app">
     <h1>User Directory</h1>
+    <div class="controls">
+  <input type="text" id="search-input" placeholder="Search by name or email...">
+  <select id="sort-select">
+    <option value="asc">Sort: A-Z</option>
+    <option value="desc">Sort: Z-A</option>
+  </select>
+  <select id="city-filter">
+    <option value="all">All Cities</option>
+  </select>
+</div>
     <div id="loading">Loading...</div>
     <div id="error" class="hidden"></div>
     <div id="users-container"></div>
