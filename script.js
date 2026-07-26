@@ -210,4 +210,79 @@ async function getAllUsers() {
 
   return [u1, u2, u3];
 }
+// Fetch API Basics
+const BASE_URL = "https://jsonplaceholder.typicode.com";
 
+
+// ===== EXERCISE 1: Your First Fetch - with .then() =====
+fetch(`${BASE_URL}/users/1`)
+  .then(response => {
+    console.log("Response object:", response);
+    console.log("Status:", response.status);
+    console.log("OK:", response.ok);
+    return response.json(); // Parse JSON
+  })
+  .then(data => {
+    console.log("User data:", data);
+  })
+  .catch(error => {
+    console.error("Fetch error:", error);
+  });
+
+
+// = Fetch with Async/Await 
+async function getUser(id) {
+  try {
+    const response = await fetch(`${BASE_URL}/users/${id}`);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+  }
+}
+
+// Use it
+async function runEx2() {
+  const user = await getUser(1);
+  console.log("Ex2 Result:", user);
+}
+runEx2();
+
+
+//  Fetch and display 
+
+// 1. A single user from JSONPlaceholder
+async function fetchSingleUser() {
+  const user = await getUser(5);
+  console.log("Practice 1 - Single User:", user);
+}
+fetchSingleUser();
+
+// 2. All users
+async function fetchAllUsers() {
+  try {
+    const response = await fetch(`${BASE_URL}/users`);
+    const users = await response.json();
+    console.log("Practice 2 - All Users:", users);
+  } catch (error) {
+    console.error(error);
+  }
+}
+fetchAllUsers();
+
+// 3. Posts for user 1
+async function fetchUserPosts() {
+  try {
+    const response = await fetch(`${BASE_URL}/users/1/posts`);
+    const posts = await response.json();
+    console.log("Practice 3 - User 1 Posts:", posts);
+  } catch (error) {
+    console.error(error);
+  }
+}
+fetchUserPosts();
