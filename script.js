@@ -414,3 +414,114 @@ function showResult(post) {
   `;
   resultDiv.classList.remove("hidden");
 }
+const BASE_URL = "https://jsonplaceholder.typicode.com";
+
+let allUsers = [];
+
+const loading = document.getElementById("loading");
+const errorDiv = document.getElementById("error");
+const container = document.getElementById("users-container");
+const searchInput = document.getElementById("search-input");
+const sortSelect = document.getElementById("sort-select");
+const cityFilter = document.getElementById("city-filter");
+
+async function fetchUsers() {
+  const response = await fetch(`${BASE_URL}/users`);
+  if (!response.ok) throw new Error("Failed to fetch users");
+  return response.json();
+}
+
+async function init() {
+  try {
+    showLoading();
+    allUsers = await fetchUsers();
+    populateCityDropdown(allUsers);
+    displayUsers(allUsers);
+    setupEventListeners();
+  } catch (error) {
+    showError(error.message);
+  } finally {
+    hideLoading();
+  }
+}
+
+// 1. Search by name or email
+function setupEventListeners() {
+  searchInput.addEventListener("input", handleFilters);
+  sortSelect.addEventListener("change", handleFilters);
+  cityFilter.addEventListener("change", handleFilters);
+}
+
+function handleFilters() {
+  let filtered = [...allUsers];
+  
+  // Search
+  const query = searchInput.value.toLowerCase();
+  filtered = filtered.filter(user => 
+    user.name.toLowerCase().includes(query) || 
+    user.email.toLowerCase().includes(query)
+  );
+  
+  // Filter by city
+  const city = cityFilter.value;
+  if (city !== "all") {
+    filtered = filtered.filter(user => user.address.city === city);
+  }
+  
+  // Sort
+  const sortOrder = sortSelect.value;
+  filtered.sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
+  
+  displayUsers(filtered);
+}
+
+// 3. Filter by city dropdown
+function populateCityDropdown(users) {
+  const cities = [...new Set(users.map(user => user.address.city))].sort();
+  cities.forEach(city => {
+    const option = document.createElement("option");
+    option.value = city;
+    option.textContent = city;
+    cityFilter.appendChild(option);
+  });
+}
+
+function displayUsers(users) {
+  if (users.length === 0) {
+    container.innerHTML = "<p>No users found</p>";
+    return;
+  }
+  
+  container.innerHTML = users.map(user => `
+    <div class="user-card">
+      <h2>${user.name}</h2>
+      <p>📧 ${user.email}</p>
+      <p>🏢 ${user.company.name}</p>
+      <p>📍 ${user.address.city}</p>
+    </div>
+  `).join("");
+}
+
+function showLoading() {
+  loading.classList.remove("hidden");
+  container.innerHTML = "";
+  errorDiv.classList.add("hidden");
+}
+
+function hideLoading() {
+  loading.classList.add("hidden");
+}
+
+function showError(message) {
+  errorDiv.textContent = `Error: ${message}`;
+  errorDiv.classList.remove("hidden");
+}
+
+// Start app
+init();
